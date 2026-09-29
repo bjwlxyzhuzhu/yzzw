@@ -1,0 +1,49 @@
+/* 播放器条（课堂试验场 / 数字教研室共用）：按钮风格统一；进度条三层（已生成 / 当前位置 / 阶段刻度）；回看时整条转为蓝色。 */
+.pl { display: flex; align-items: center; gap: 14px; padding: 7px 12px; border-radius: 14px; background: var(--sw-panel); border: 1px solid var(--sw-line); box-shadow: 0 4px 16px #6b3a2a10; }
+.pl-btns { display: flex; gap: 6px; flex: none; }
+.pl-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--sw-line); background: var(--sw-panel-2); color: var(--sw-ink); font-weight: 650; font-size: calc(13.5px * var(--fs)); white-space: nowrap; }
+.pl-btn svg { width: 15px; height: 15px; flex: none; }
+.pl-btn:hover:not(:disabled) { background: var(--sw-panel); border-color: #D8A14A99; transform: translateY(-1px); }
+.pl-btn:disabled { opacity: .38; }
+.pl-main { min-width: 124px; color: #fff; border-color: #D8A14A; background: linear-gradient(120deg, #C62A3D, #8E1426); box-shadow: 0 6px 16px #A6192E33; }
+.pl-main:hover:not(:disabled) { background: linear-gradient(120deg, #D73A49, #A6192E); }
+.pl-stop:not(:disabled) { color: var(--sw-red); }
+.pl-mid { flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 2px; }
+.pl-track { position: relative; height: 22px; cursor: pointer; touch-action: none; outline: none; }
+.pl-track.off { cursor: default; opacity: .5; }
+.pl-track:focus-visible .pl-rail { box-shadow: 0 0 0 2px #EBC46B; }
+.pl-rail { position: absolute; left: 0; right: 0; top: 8px; height: 6px; border-radius: 6px; background: var(--sw-line); overflow: hidden; }
+.pl-buf { position: absolute; left: 0; top: 0; bottom: 0; background: color-mix(in srgb, #D8A14A 30%, transparent); transition: width .3s; }
+.pl-fill { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, #A6192E, #D8A14A); }
+.pl-marks i { position: absolute; top: 5px; width: 2px; height: 12px; border-radius: 1px; background: var(--sw-ink-2); opacity: .45; transform: translateX(-1px); pointer-events: none; }
+.pl-marks i.mn { top: 7px; height: 8px; width: 1px; opacity: .3; }
+.pl-knob { position: absolute; top: 4px; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid #A6192E; transform: translateX(-50%); box-shadow: 0 2px 6px #0000003a; pointer-events: none; }
+.pl-track:not(.off):hover .pl-knob { transform: translateX(-50%) scale(1.15); }
+.pl-hover { position: absolute; bottom: calc(100% + 2px); transform: translateX(-50%); padding: 1px 7px; border-radius: 5px; background: #2a1c22; color: #fff; font-size: max(11px, calc(11px * var(--fs))); white-space: nowrap; pointer-events: none; }
+.pl-info { display: flex; align-items: baseline; gap: 12px; font-size: max(11.5px, calc(12px * var(--fs))); color: var(--sw-ink-2); min-width: 0; }
+.pl-time { font-weight: 700; color: var(--sw-ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pl-stage { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.pl-state { margin-left: auto; white-space: nowrap; }
+.pl-state.on { color: var(--sw-red); } .pl-state.rv { color: #4285D4; font-weight: 600; } .pl-state.ff { color: var(--sw-gold); font-weight: 600; }
+.pl.reviewing .pl-fill { background: linear-gradient(90deg, #245EA8, #49A5FF); }
+.pl.reviewing .pl-knob { border-color: #245EA8; }
+.pl-speed { display: flex; gap: 2px; flex: none; padding: 2px; border-radius: 9px; border: 1px solid var(--sw-line); background: var(--sw-panel-2); }
+.pl-speed button { border: 0; background: none; padding: 3px 7px; border-radius: 7px; font-size: max(11.5px, calc(11.5px * var(--fs))); color: var(--sw-ink-2); }
+.pl-speed button:hover:not(:disabled) { background: var(--sw-line); transform: none; }
+.pl-speed button.on { background: #245EA8; color: #fff; font-weight: 700; }
+:root:not([data-theme="light"]) .pl-knob { background: #1b161d; }
+@media (max-width: 1100px) { .pl { flex-wrap: wrap; } .pl-mid { order: 3; flex-basis: 100%; } }
+@media (max-width: 720px) { .pl-btn span { display: none; } .pl-btn { padding: 0 10px; } .pl-main { min-width: 0; } .pl-main span { display: inline; } }
+@media (prefers-reduced-motion: reduce) { .pl-buf { transition: none; } }
+
+/* 中性面板 + 细进度条：已播放用品牌红，回看时转蓝；按钮为浅色键帽，主按钮为红色 */
+.pl { border-radius: 14px; }
+.pl-btn { box-shadow: inset 0 1px 0 #ffffff26, 0 1px 2px #0000001f; }
+:root[data-theme="light"] .pl-btn:not(.pl-main) { background: linear-gradient(180deg, #ffffff, #f6f2ee); box-shadow: inset 0 1px 0 #fff, 0 1px 2px #4a2a2a1f; }
+.pl-fill { background: #A6192E; }
+.pl.reviewing .pl-fill { background: #245EA8; }
+.pl-speed button.on { background: #A6192E; }
+.pl-track, .pl-track * { user-select: none; -webkit-user-select: none; -webkit-user-drag: none; }
+/* 旋钮在 0% / 100% 时不压住按钮与倍速：进度槽两端留出旋钮半径 */
+.pl-mid { padding: 0 12px; }
+.pl-hover { white-space: nowrap; }
