@@ -1,0 +1,17 @@
+{
+  "name": "yanzhi-chinese",
+  "version": "6.0.0",
+  "private": true,
+  "description": "演知中文——国际中文教师多智能体研课与课堂预演平台（本地服务端 + 教师前台 + 管理员后台）",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node server/server.js",
+    "start:zw": "node --env-file=zw.env server/server.js",
+    "init-admin": "node server/cli.js create-admin",
+    "cli": "node server/cli.js",
+    "test": "node --env-file=tests/test.env --test --test-concurrency=1 tests/*.test.js"
+  }
+}
