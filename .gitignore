@@ -1,0 +1,14 @@
+data/
+data-szsx/
+*.db
+*.db-wal
+*.db-shm
+master.key
+.env
+szsx.env
+yszj.env
+node_modules/
+data-zw/
+zw.env
+license.json
+*-private.pem
