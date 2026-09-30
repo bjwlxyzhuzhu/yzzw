@@ -27,7 +27,17 @@ YANZHI_SECURE_COOKIE=0
 
 `http://服务器IP:8790/`
 
-数据会持久化在 Docker volume `yzzw-data` 中。
+数据会直接持久化在宿主机 `/opt/yzzw` 目录中。部署前请在宿主机执行：
+
+```bash
+sudo mkdir -p /opt/yzzw
+```
+
+如果容器以非 root 用户写入数据而遇到权限错误，请将目录所有者调整为容器用户（当前镜像使用 Node 用户）：
+
+```bash
+sudo chown -R 1000:1000 /opt/yzzw
+```
 
 ## 3. 创建管理员
 

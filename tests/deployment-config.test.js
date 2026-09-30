@@ -9,6 +9,7 @@ test('deployment bundle exposes the GHCR image and persistent Portainer service 
   assert.match(compose, /image:\s*ghcr\.io\/bjwlxyzhuzhu\/yzzw:latest/);
   assert.match(compose, /-\s*"8790:8787"/);
   assert.match(compose, /\/app\/data/);
+  assert.match(compose, /-\s*\/opt\/yzzw:\/app\/data/);
   assert.match(compose, /YANZHI_MASTER_KEY/);
   assert.match(compose, /healthcheck:/);
 });
