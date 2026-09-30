@@ -1,0 +1,25 @@
+services:
+  yzzw:
+    image: ghcr.io/bjwlxyzhuzhu/yzzw:latest
+    container_name: yzzw
+    restart: unless-stopped
+    ports:
+      - "8790:8787"
+    environment:
+      HOST: 0.0.0.0
+      PORT: 8787
+      YANZHI_BRAND: zw
+      YANZHI_DATA_DIR: /app/data
+      YANZHI_MASTER_KEY: ${YANZHI_MASTER_KEY:?Set YANZHI_MASTER_KEY to a stable 64-character hex key}
+      YANZHI_SECURE_COOKIE: ${YANZHI_SECURE_COOKIE:-0}
+    volumes:
+      - yzzw-data:/app/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  yzzw-data:
