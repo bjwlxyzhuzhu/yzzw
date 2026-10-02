@@ -35,6 +35,6 @@
     fapply(v); window.dispatchEvent(new Event('resize'));
   });
   fapply(fpref());
-  window.yzTheme = { set: set, pref: pref, sync: sync };
+  window.yzTheme = { set: set, pref: pref, sync: sync, refresh: apply };
   apply();
 })();

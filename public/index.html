@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
@@ -17,8 +17,13 @@
 <link rel="stylesheet" href="/css/assistant.css">
 <link rel="stylesheet" href="/css/light.css">
 <link rel="stylesheet" href="/css/polish.css">
+<link rel="stylesheet" href="/css/neural-blue.css" id="neural-blue-style" media="not all">
+<link rel="stylesheet" href="/css/neural.css" id="neural-style" media="not all">
+<link rel="stylesheet" href="/css/neural-nav.css">
 </head>
 <body>
+<video class="neural-art" hidden autoplay muted loop playsinline preload="auto" aria-hidden="true" poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/130837c4-0244-4f37-9c61-8d801d93fd29.jpg" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260912_104303_0c6d60b2-9353-408e-9449-585108a22fb5.mp4"></video>
+<div class="neural-veil" hidden aria-hidden="true"></div>
 <a class="skip-link" href="#app">跳到主要内容</a>
 <header class="app-header" id="header" hidden>
   <button class="brand" data-link="/" aria-label="研思智境：“研—演—评—改”多智能体数字教研实验工坊，返回首页" title="“研—演—评—改”多智能体数字教研实验工坊"><img class="brand-mark" src="/img/logo-mark.png" alt="" width="40" height="40"><span><b>研思智境</b><small class="brand-en">Research · Simulation · Evaluation · Improvement</small></span></button>
@@ -31,7 +36,7 @@
     <a href="/research" data-link="/research">评价与科研</a>
   </nav>
   <div class="header-tools"><div class="fs-switch" role="group" aria-label="字号"><button type="button" data-fs-set="m" title="标准字号">A</button><button type="button" data-fs-set="l" title="较大字号">A</button><button type="button" data-fs-set="xl" title="特大字号">A</button></div><div class="theme-switch" role="group" aria-label="显示模式"><button type="button" data-theme-set="auto" title="自动：跟随系统">◐<span class="lbl"> 自动</span></button><button type="button" data-theme-set="light" title="浅色">☀<span class="lbl"> 浅色</span></button><button type="button" data-theme-set="dark" title="深色">☾<span class="lbl"> 深色</span></button></div>
-    <a class="ghost hdr-manual" href="/manual" target="_blank" rel="noopener" aria-label="打开操作手册（新窗口）">📖<span class="lbl"> 操作手册</span></a>
+    <!-- 手册入口暂时停用。 -->
     <button class="credit-pill" id="credit-pill" aria-label="积分余额与流水">积分 <b id="credit-available">—</b><span class="faint" id="credit-reserved"></span></button>
     <div class="menu" id="user-menu">
       <button class="ghost" id="user-btn" aria-haspopup="true" aria-expanded="false">—</button>
@@ -45,5 +50,7 @@
 <main id="app" tabindex="-1"></main>
 <div id="toast" role="status" aria-live="polite"></div>
 <script type="module" src="/js/app.js"></script>
+<script src="/js/neural.js"></script>
 </body>
 </html>
+

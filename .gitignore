@@ -12,3 +12,10 @@ data-zw/
 zw.env
 license.json
 *-private.pem
+.local-backup/
+.claude/
+backups/
+*.log
+docs/screenshots/
+*.zip
+!tests/fixtures/*.zip

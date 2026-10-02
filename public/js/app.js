@@ -1,9 +1,9 @@
-// Teacher front-end: router, header, login, library/editor, rating, export, account. Home page lives in home.js.
+﻿// Teacher front-end: router, header, login, library/editor, rating, export, account. Home page lives in home.js.
 import { get, post, put, key, download, downloadPost, ApiError } from './api.js';
 import { esc, $, $$, toast, fail, modal, confirmBox, formData, fmtTime, TYPE_NAME, MODULE_NAME, STATUS_NAME, SOURCE_NAME, tour, resetTours } from './ui.js';
 import { renderSeminar } from './seminar.js';
 import { renderClassroom } from './classroom.js';
-import { pageHome as renderHome } from './home.js';
+import { pageHome as renderHome, pageWelcome } from './home.js';
 import { setAgentRegistry, userAvatar, avatarPicker } from './avatar3d.js';
 import { mountAssistant } from './assistant.js';
 import { renderAgents } from './agents-page.js';
@@ -28,7 +28,10 @@ export async function refreshMe() {
 export async function catalog() { if (!state.catalog) { state.catalog = await get('/api/catalog'); setAgentRegistry({ roles: state.catalog.agent_roles, studentAvatars: state.catalog.student_avatars }); } return state.catalog; }
 export const invalidateCatalog = () => { state.catalog = null; };
 
-window.addEventListener('yz:unauth', () => { if (location.pathname !== '/login') navigate('/login'); });
+window.addEventListener('yz:unauth', (event) => {
+  if (location.pathname === '/' && event.detail === '/api/me') return;
+  if (location.pathname !== '/login') navigate('/login');
+});
 window.addEventListener('yz:mustchange', () => { if (location.pathname !== '/account') { toast('首次登录请先修改密码', true); navigate('/account'); } });
 
 // ---------- router ----------
@@ -44,12 +47,16 @@ export function navigate(path, replace = false) { if (replace) history.replaceSt
 async function route() {
   if (dispose) { try { dispose(); } catch { /* ignore */ } dispose = null; }
   const url = new URL(location.href);
+  window.yzNeural?.setPage(url.pathname);
   const fn = routes[url.pathname] || routes['/'];
   const navKey = { '/rating': '/research', '/export': '/research' }[url.pathname] || url.pathname;
   $$('.nav a').forEach((a) => a.classList.toggle('active', a.dataset.link === navKey));
   helpBtn.hidden = url.pathname === '/login';
   if (url.pathname !== '/login') {
-    if (!state.me) { const me = await refreshMe(); if (!me) return navigate('/login', true); }
+    if (!state.me) { const me = await refreshMe(); if (!me) {
+      if (url.pathname === '/') { $('#header').hidden = true; helpBtn.hidden = true; dispose = pageWelcome(root, { navigate }); return; }
+      return navigate('/login', true);
+    } }
     $('#header').hidden = false;
     if (state.me.must_change_password && url.pathname !== '/account') return navigate('/account', true);
   } else $('#header').hidden = true;
@@ -100,7 +107,7 @@ export async function showLedger() {
 async function pageLogin() {
   const cfg = await get('/api/public-config').catch(() => ({}));
   root.innerHTML = `<div class="login-wrap"><form class="panel login-card" id="lf" autocomplete="on">
-    <div class="fs-switch" role="group" aria-label="字号"><button type="button" data-fs-set="m" title="标准字号">A</button><button type="button" data-fs-set="l" title="较大字号">A</button><button type="button" data-fs-set="xl" title="特大字号">A</button></div><div class="theme-switch" role="group" aria-label="显示模式"><button type="button" data-theme-set="auto" title="自动：跟随系统">◐</button><button type="button" data-theme-set="light" title="浅色">☀</button><button type="button" data-theme-set="dark" title="深色">☾</button></div><div class="login-logo"><img src="/img/logo-full.png" alt="研思智境 · Research · Reflection · Simulation · Improvement · Multi-Agent Teaching Research Intelligence"></div><h1 class="login-title">“研—演—评—改”多智能体数字教研实验工坊</h1><div class="small muted login-sub">教师登录</div>
+    <div class="fs-switch" role="group" aria-label="字号"><button type="button" data-fs-set="m" title="标准字号">A</button><button type="button" data-fs-set="l" title="较大字号">A</button><button type="button" data-fs-set="xl" title="特大字号">A</button></div><div class="theme-switch" role="group" aria-label="显示模式"><button type="button" data-theme-set="auto" title="自动：跟随系统">◐</button><button type="button" data-theme-set="light" title="浅色">☀</button><button type="button" data-theme-set="dark" title="深色">☾</button></div><div class="login-logo"><span>研思智境</span></div><h1 class="login-title">“研—演—评—改”多智能体数字教研实验工坊</h1><div class="small muted login-sub">教师登录</div>
     <div style="display:grid;gap:12px"><label>登录名<input name="login" autocomplete="username" required></label><label>密码<input name="password" type="password" autocomplete="current-password" required></label>
     <button class="primary" type="submit">登录</button>
     <div class="row small"><a href="/admin/login">管理员入口</a><span class="grow"></span>${cfg.self_register ? '<a href="#" id="reg">注册教师账号</a>' : '<span class="faint">账号由管理员开通</span>'}</div></div></form></div>`;
@@ -441,3 +448,4 @@ window.addEventListener('yz:unauth', () => { helpBtn.hidden = true; });
 
 mountAssistant({ isAuthed: () => !!state.me });
 route();
+

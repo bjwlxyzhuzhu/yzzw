@@ -52,7 +52,7 @@ export function crystalOrb(inner, { tone = 't', id = `orb${++uid}`, cls = '' } =
 export function avatar3d(p = {}, opts = {}) {
   const id = `av${++uid}`;
   const f = p.gender === 'f', L = p.look || {}, age = p.age || 30;
-  const skin = SKIN[(L.skin ?? 0) % SKIN.length];
+  const skin = L.skinHex || SKIN[(L.skin ?? 0) % SKIN.length]; // skinHex：自定义肤色（可选）
   const hair = L.grey ? mix(L.hairColor || HAIR[0], '#b9b7b4', L.grey) : (L.hairColor || HAIR[0]);
   const cloth = L.color || CLOTH[0], shirt = L.shirt || '#f7f4ef';
   const jaw = f ? 'C82 74 72 87 60 88 C48 87 38 74 37 58' : 'C84 76 74 88 60 89 C46 88 36 76 36 58';

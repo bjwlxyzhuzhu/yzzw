@@ -308,7 +308,7 @@ export function createApp({ dataDir = process.env.YANZHI_DATA_DIR || join(ROOT, 
     res.setHeader('x-content-type-options', 'nosniff');
     res.setHeader('referrer-policy', 'same-origin');
     res.setHeader('x-frame-options', 'DENY');
-    res.setHeader('content-security-policy', "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
+    res.setHeader('content-security-policy', "default-src 'self'; img-src 'self' data: https://d2ol7oe51mr4n9.cloudfront.net; media-src 'self' https://d8j0ntlcm91z4.cloudfront.net; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
     const url = new URL(req.url, 'http://local');
     try {
       if (!url.pathname.startsWith('/api/')) { let pth = url.pathname; try { pth = decodeURIComponent(pth); } catch { /* keep raw */ } return serveStatic(pth, res); }

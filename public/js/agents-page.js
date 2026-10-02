@@ -136,7 +136,7 @@ export async function renderAgents(root, { state, navigate, query, invalidate })
       <section class="panel"><h2 style="margin-top:0">学生智能体形象 <small class="faint" style="font-size:.6em">（前 40 名固定姓名）</small></h2>
         <p class="small muted">点击学生可上传形象图片；也可一次选择多张图片，文件名写成“S01.jpg”或学生姓名（如“赵子涵.png”）会自动对应。</p>
         <label class="inline" style="cursor:pointer"><span class="badge gold" style="padding:6px 12px">⬆ 批量上传学生形象</span><input type="file" id="stu-bulk" multiple accept="image/png,image/jpeg,image/webp" hidden></label>
-        <div class="stu-grid" style="margin-top:10px">${list.map((s, i) => `<button type="button" class="stu-card" data-seat="${i}"><span class="cl-ava">${data.student_avatars[i] ? orbImg(data.student_avatars[i]) : avatar3d(studentLook(i, s.gender), { tone: 's' })}</span><b>${esc(s.name)}</b><small>S${String(i + 1).padStart(2, '0')} · 第${Math.floor(i / 5) + 1}组</small></button>`).join('')}</div></section></div>`;
+        <div class="stu-grid" style="margin-top:10px">${list.map((s, i) => `<button type="button" class="stu-card" data-seat="${i}"><span class="cl-ava">${data.student_avatars[i] ? orbImg(data.student_avatars[i]) : avatar3d(studentLook(i, s.gender), { tone: 's' })}</span><b>${esc(s.name)}</b><small>${s.country ? `${esc(s.country)} · ${esc(s.l1)}` : `S${String(i + 1).padStart(2, '0')} · 第${Math.floor(i / 5) + 1}组`}</small></button>`).join('')}</div></section></div>`;
     drawProfiles();
     $('#cp-import').addEventListener('click', importProfile);
     $('#cp-template').addEventListener('click', () => {

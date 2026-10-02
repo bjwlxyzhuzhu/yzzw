@@ -1,0 +1,13 @@
+/* Shared landing/interior navigation: one moving glass pill, with no layout changes. */
+.neural-sliding-nav{position:relative;isolation:isolate;user-select:none}
+.neural-nav-glass{position:absolute;left:0;top:0;z-index:0;pointer-events:none;border-radius:999px;opacity:0;background:linear-gradient(115deg,rgb(255 226 178 / .12),rgb(176 206 238 / .07) 55%,rgb(150 196 244 / .18)),linear-gradient(180deg,#ffffff26,#ffffff0b);border:1px solid rgb(209 229 249 / .48);backdrop-filter:blur(26px) saturate(.6);box-shadow:inset 0 1px 0 #ffffff66,0 0 18px rgb(168 204 252 / .15);transition:transform .38s cubic-bezier(.22,1,.36,1),width .38s cubic-bezier(.22,1,.36,1),height .38s cubic-bezier(.22,1,.36,1),opacity .2s,scale .14s}
+.neural-nav-glass.is-visible{opacity:1}
+:root .app-header .nav.neural-sliding-nav a,:root .neural-navigation.neural-sliding-nav a{position:relative;z-index:1;padding:9px 13px;border:1px solid transparent;border-radius:999px;font-size:calc(13px * var(--fs,1));font-weight:450;line-height:1.5;color:#d3dfed;background:transparent;box-shadow:none;transform:none;text-decoration:none;white-space:nowrap;transition:color .2s,scale .14s}
+:root .app-header .nav.neural-sliding-nav a:is(:hover,:focus-visible,.active,.is-nav-target),:root .neural-navigation.neural-sliding-nav a:is(:hover,:focus-visible,.is-nav-target){background:transparent;border-color:transparent;color:#fff;box-shadow:none;transform:none;font-weight:450}
+:root .app-header .nav.neural-sliding-nav a::after{display:none}
+:root .app-header .nav.neural-sliding-nav a:focus-visible,:root .neural-navigation.neural-sliding-nav a:focus-visible{outline:2px solid #a9d4ff;outline-offset:2px}
+:root .app-header .nav.neural-sliding-nav a:active,:root .neural-navigation.neural-sliding-nav a:active{scale:.96}
+.neural-sliding-nav:has(a:active) .neural-nav-glass{scale:.96}
+/* Hide legacy manual entries if another page injects one. */
+.app-header .hdr-manual,.neural-navigation a[href="/manual"]{display:none!important}
+@media(prefers-reduced-motion:reduce){.neural-nav-glass,.neural-sliding-nav a{transition:none!important}}

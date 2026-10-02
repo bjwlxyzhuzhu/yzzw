@@ -1,4 +1,4 @@
-// Admin console. Every action is authorised server-side (admin-scope session + is_admin).
+﻿// Admin console. Every action is authorised server-side (admin-scope session + is_admin).
 import { get, post, put, del, download } from './api.js';
 import { esc, $, $$, toast, fail, modal, confirmBox, formData, fmtTime } from './ui.js';
 
@@ -14,6 +14,7 @@ $('#logout').addEventListener('click', async () => { await post('/api/admin/auth
 
 async function route() {
   const p = location.pathname;
+  window.yzNeural?.setPage(p);
   if (p === '/admin/login') return login();
   if (!me) { try { me = (await get('/api/admin/me')).user; } catch { return go('/admin/login'); } }
   $('#header').hidden = false; $('#shell').hidden = false; $('#login-root').innerHTML = '';
@@ -27,7 +28,7 @@ async function route() {
 
 function login() {
   $('#header').hidden = true; $('#shell').hidden = true;
-  $('#login-root').innerHTML = `<div class="login-wrap" style="position:relative;z-index:1"><form class="panel login-card" id="lf"><div class="fs-switch" role="group" aria-label="字号"><button type="button" data-fs-set="m" title="标准字号">A</button><button type="button" data-fs-set="l" title="较大字号">A</button><button type="button" data-fs-set="xl" title="特大字号">A</button></div><div class="theme-switch" role="group" aria-label="显示模式"><button type="button" data-theme-set="auto" title="自动：跟随系统">◐</button><button type="button" data-theme-set="light" title="浅色">☀</button><button type="button" data-theme-set="dark" title="深色">☾</button></div><div class="login-logo"><img src="/img/logo-full.png" alt="研思智境 · Research · Reflection · Simulation · Improvement · Multi-Agent Teaching Research Intelligence"></div><h1 class="login-title">管理员登录</h1><div class="small muted login-sub">研思智境平台后台 · 与教师入口分开的会话</div>
+  $('#login-root').innerHTML = `<div class="login-wrap" style="position:relative;z-index:1"><form class="panel login-card" id="lf"><div class="fs-switch" role="group" aria-label="字号"><button type="button" data-fs-set="m" title="标准字号">A</button><button type="button" data-fs-set="l" title="较大字号">A</button><button type="button" data-fs-set="xl" title="特大字号">A</button></div><div class="theme-switch" role="group" aria-label="显示模式"><button type="button" data-theme-set="auto" title="自动：跟随系统">◐</button><button type="button" data-theme-set="light" title="浅色">☀</button><button type="button" data-theme-set="dark" title="深色">☾</button></div><div class="login-logo"><span>研思智境</span></div><h1 class="login-title">管理员登录</h1><div class="small muted login-sub">研思智境平台后台 · 与教师入口分开的会话</div>
     <div style="display:grid;gap:12px"><label>登录名<input name="login" autocomplete="username"></label><label>密码<input name="password" type="password" autocomplete="current-password"></label><button class="primary">登录</button><a class="small" href="/login">← 教师入口</a>
     <p class="small faint">首个管理员账号通过受保护的部署初始化命令创建（npm run init-admin），系统不内置默认密码。</p></div></form></div>`;
   $('#lf').addEventListener('submit', async (e) => { e.preventDefault(); try { me = (await post('/api/admin/auth/login', formData(e.target))).user; go('/admin'); } catch (err) { fail(err); } });
@@ -241,3 +242,4 @@ async function settings() {
 }
 
 route();
+

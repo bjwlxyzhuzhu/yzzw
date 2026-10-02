@@ -157,7 +157,7 @@ export function ideologyHtml(events, { names, profiles, terms }) {
 }
 export function groupDetailHtml(g, { events, terms }) {
   return `<table class="data cl-gd"><thead><tr><th>学生</th><th>当前状态</th><th>发言</th><th>最近观点</th><th>需关注</th><th></th></tr></thead><tbody>
-    ${g.members.map((m) => `<tr><td><span class="row" style="gap:8px;flex-wrap:nowrap">${stuAva(m)}<b>${esc(m.name)}</b></span></td><td><span class="cl-st st-${m.status}">${STATE_LABEL[m.status]}</span></td><td>${m.spoke} 次</td>
+    ${g.members.map((m) => `<tr><td><span class="row" style="gap:8px;flex-wrap:nowrap">${stuAva(m)}<span><b>${esc(m.name)}</b>${m.traits?.country ? `<br><small class="faint">${esc(m.traits.country)} · ${esc(m.traits.l1)} · HSK ${m.traits.hsk}</small>` : ''}</span></span></td><td><span class="cl-st st-${m.status}">${STATE_LABEL[m.status]}</span></td><td>${m.spoke} 次</td>
       <td class="small">${m.lastText ? hl(clip(m.lastText, 70), terms) : '<span class="faint">—</span>'}</td><td>${m.status === 'silent' ? '<span class="badge warn">尚未发言</span>' : m.status === 'challenging' ? '<span class="badge">提出质疑</span>' : ''}</td>
       <td><button type="button" class="small" data-call="${m.id}">点名</button></td></tr>`).join('')}</tbody></table>
     <p class="cl-note">小组发言共 ${g.events} 次；状态由最近的课堂事件、举手队列和小组讨论环节推导。${events.length ? '' : ''}</p>`;

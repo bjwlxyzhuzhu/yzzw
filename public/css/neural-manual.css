@@ -1,0 +1,16 @@
+﻿/* Manual follows the same navy / glass system as the application. */
+:root{--red:#b7d9ff;--red2:#729bc5;--gold:rgb(241 209 161);--ink:#f4f8fd;--muted:#a2a9b8;--line:#b5cee433;--bg:#02060f;--card:#101a29;--blue:#addcff}
+body{background:radial-gradient(ellipse at 70% 0,#192e48,transparent 55%),var(--bg);color:var(--ink)}
+header.top{background:linear-gradient(120deg,#0f1b2c,#152940,#09111e);border-bottom:1px solid var(--line)}
+.card,section,.box{background:var(--card);border-color:var(--line)}
+nav.toc,.toc{background:#101a29;border-color:var(--line)}
+button,.btn{background:#1b2b40;color:var(--ink);border-color:var(--line);border-radius:999px}
+pre,code{background:#080f1b;color:#d4e8ff}
+table th,table td{border-color:var(--line)}
+table th{background:#152235;color:var(--ink)}
+.notice,.tip,.warn{background:#182637;color:#d4e8ff;border-color:var(--line)}
+footer{background:#080f1b;color:var(--muted);border-color:var(--line)}
+.flow span,.flow .s,.flow .c,.files a,.say,table{background:#152235;color:var(--ink);border-color:var(--line)}
+.files a:hover{background:#213650}
+.num,.num.c{background:#295882;color:#fff;box-shadow:none}.num.g{background:rgb(241 209 161);color:#142235;box-shadow:none}
+.shot{background:#080f1b}.say{border-left-color:var(--gold)}

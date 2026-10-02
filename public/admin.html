@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
@@ -9,8 +9,13 @@
 <link rel="stylesheet" href="/css/theme.css">
 <link rel="stylesheet" href="/css/admin.css">
 <link rel="stylesheet" href="/css/light.css">
+<link rel="stylesheet" href="/css/neural-blue.css" id="neural-blue-style" media="not all">
+<link rel="stylesheet" href="/css/neural.css" id="neural-style" media="not all">
+<link rel="stylesheet" href="/css/neural-nav.css">
 </head>
 <body>
+<video class="neural-art" hidden autoplay muted loop playsinline preload="metadata" aria-hidden="true" poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/130837c4-0244-4f37-9c61-8d801d93fd29.jpg" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260912_104303_0c6d60b2-9353-408e-9449-585108a22fb5.mp4"></video>
+<div class="neural-veil" hidden aria-hidden="true"></div>
 <header class="app-header" id="header" hidden>
   <a class="brand" href="/admin" style="text-decoration:none"><img class="brand-mark" src="/img/logo-mark.png" alt="" width="40" height="40"><span><b>研思智境 · 管理员后台</b><small>账号 · 积分 · 模型 · 模板 · 审计</small></span></a>
   <div class="header-tools"><div class="fs-switch" role="group" aria-label="字号"><button type="button" data-fs-set="m" title="标准字号">A</button><button type="button" data-fs-set="l" title="较大字号">A</button><button type="button" data-fs-set="xl" title="特大字号">A</button></div><div class="theme-switch" role="group" aria-label="显示模式"><button type="button" data-theme-set="auto" title="自动：跟随系统">◐<span class="lbl"> 自动</span></button><button type="button" data-theme-set="light" title="浅色">☀<span class="lbl"> 浅色</span></button><button type="button" data-theme-set="dark" title="深色">☾<span class="lbl"> 深色</span></button></div><span class="badge red">管理员会话</span><span id="who" class="small muted"></span><button class="ghost" id="logout">退出</button></div>
@@ -25,5 +30,7 @@
 <main id="login-root"></main>
 <div id="toast"></div>
 <script type="module" src="/js/admin.js"></script>
+<script src="/js/neural.js"></script>
 </body>
 </html>
+

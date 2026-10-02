@@ -336,12 +336,22 @@ export function seminarPrompt(step, ctx) {
   return { system, messages: [{ role: 'user', content: `${matBlock}${kpBlock}最近发言：\n${hist}\n\n任务：${task}` }] };
 }
 
+/** 输出因长度上限被截断时（JSON 数组没有收尾），保留已完整输出的行；一行都不完整时返回 null。 */
+function salvageRows(t) {
+  const s = t.indexOf('['); if (s < 0) return null;
+  for (let e = t.lastIndexOf('}'); e > s; e = t.lastIndexOf('}', e - 1)) {
+    try { const a = JSON.parse(`${t.slice(s, e + 1)}]`); if (Array.isArray(a) && a.length) return a; } catch { /* 继续向前找 */ }
+  }
+  return null;
+}
+
 /** Parse model output for a section. Throws Error('bad_format') on invalid structure. */
 export function parseSectionOutput(sec, text) {
   const t = String(text || '').trim();
   if (sec.kind === 'text') { if (!t) throw Object.assign(new Error('空输出'), { code: 'bad_format' }); return { content: t.slice(0, 20000) }; }
   const m = t.match(/\[[\s\S]*\]/);
-  let arr; try { arr = JSON.parse(m ? m[0] : t); } catch { throw Object.assign(new Error('输出不是有效 JSON 数组'), { code: 'bad_format' }); }
+  let arr; try { arr = JSON.parse(m ? m[0] : t); } catch { arr = salvageRows(t); }
+  if (!arr) throw Object.assign(new Error('输出不是有效 JSON 数组'), { code: 'bad_format' });
   if (!Array.isArray(arr) || !arr.length || !arr.every((x) => x && typeof x === 'object')) throw Object.assign(new Error('输出不是对象数组'), { code: 'bad_format' });
   const keys = sec.columns.map((c) => c.key);
   return { rows: arr.slice(0, 300).map((x) => Object.fromEntries(keys.map((k) => [k, x[k] == null ? '' : String(x[k])]))) };

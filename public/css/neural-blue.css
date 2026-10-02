@@ -1,0 +1,41 @@
+﻿/* Color samples from the rendered landing video, home-classroom-hover.png (1440x900):
+   (420,630) #051932; (430,660) #00214a; (1040,800) #064179;
+   (1020,760) #307cb8; (1000,740) #5397c8.
+   Recolor existing blue controls only; page structure and neutral panels stay intact. */
+:root[data-neural-interior]{
+ --landing-navy:#051932;--landing-deep:#00214a;--landing-blue:#064179;--landing-ray:#307cb8;--landing-ice:#5397c8;
+ --landing-fill:linear-gradient(115deg,var(--landing-blue),var(--landing-deep));
+ --landing-hover:linear-gradient(115deg,var(--landing-blue),color-mix(in srgb,var(--landing-ray) 85%,var(--landing-navy)));
+ --red:var(--landing-ice);--red-2:var(--landing-blue);--red-soft:rgb(83 151 200 / .14);
+ --sw-red:var(--landing-ice);--sw-red-2:var(--landing-blue);--sw-red-soft:rgb(83 151 200 / .12);
+ --sw-blue:var(--landing-ice);--sw-blue-soft:rgb(83 151 200 / .14);--cl-blue:var(--landing-ice);--cl-cyan:var(--landing-ice);
+ --mod-edge:rgb(83 151 200 / .46);
+}
+:root[data-neural-interior][data-theme="light"]{--red:var(--landing-blue);--sw-red:var(--landing-blue);--sw-red-soft:rgb(48 124 184 / .10);--red-soft:rgb(48 124 184 / .10);--sw-blue:var(--landing-ray);--mod-edge:rgb(48 124 184 / .5)}
+:root[data-neural-interior] .app-header{
+ background:radial-gradient(ellipse at 85% 0%,rgb(83 151 200 / .20),transparent 55%),linear-gradient(100deg,var(--landing-navy),var(--landing-deep) 55%,var(--landing-blue));
+ border-bottom-color:rgb(83 151 200 / .5);box-shadow:0 4px 18px rgb(5 25 50 / .16);
+}
+:root[data-neural-interior] .app-header .brand,:root[data-neural-interior] .app-header .brand small,:root[data-neural-interior] .app-header .nav a{color:#eef6ff}
+:root[data-neural-interior] .app-header .nav a.active{background:rgb(83 151 200 / .14);box-shadow:inset 0 -2px 0 var(--landing-ice)}
+:root[data-neural-interior] .app-header .nav a:hover,:root[data-neural-interior] .app-header .nav a:focus-visible{background:var(--landing-fill);color:#fff;border-color:rgb(83 151 200 / .65);box-shadow:inset 0 1px 0 #ffffff55,0 3px 0 var(--landing-navy),0 8px 16px rgb(5 25 50 / .25)}
+:root[data-neural-interior] button.primary,:root[data-neural-interior] .cl-top .autoplay,:root[data-neural-interior] .sw-top .autoplay,:root[data-neural-interior] .pl-main,:root[data-neural-interior] .sw-join,:root[data-neural-interior] .cl-rail button.on,:root[data-neural-interior] .pl-speed button.on{
+ background:var(--landing-fill);border-color:rgb(83 151 200 / .65);color:#fff;box-shadow:inset 0 1px 0 #ffffff20,0 6px 18px rgb(6 65 121 / .16);
+}
+:root[data-neural-interior] button.primary:hover:not(:disabled),:root[data-neural-interior] .cl-top .autoplay:hover:not(:disabled),:root[data-neural-interior] .sw-top .autoplay:hover:not(:disabled),:root[data-neural-interior] .pl-main:hover:not(:disabled),:root[data-neural-interior] .cl-rail button.on:hover,:root[data-neural-interior] .pl-speed button.on:hover{background:var(--landing-hover);border-color:var(--landing-ice)}
+:root[data-neural-interior] .rf-plate{background:var(--landing-fill);color:#eef6ff;border-color:rgb(83 151 200 / .60);box-shadow:0 4px 12px rgb(5 25 50 / .2),inset 0 1px 0 #ffffff40}
+:root[data-neural-interior] .mode-switch .mode-card.on.demo{background:var(--landing-fill);color:#fff;border-color:var(--landing-ray);box-shadow:0 4px 14px rgb(48 124 184 / .16)}
+:root[data-neural-interior] .sw-room .sw-core{background:linear-gradient(180deg,color-mix(in srgb,var(--landing-ice) 10%,white),color-mix(in srgb,var(--landing-ice) 18%,white));box-shadow:0 10px 30px rgb(48 124 184 / .15),inset 0 1px 0 #fff}
+:root[data-neural-interior]:not([data-theme="light"]) .sw-room .sw-core{background:linear-gradient(180deg,var(--landing-deep),var(--landing-navy));box-shadow:0 10px 30px rgb(48 124 184 / .12),inset 0 1px 0 #ffffff20}
+:root[data-neural-interior] .cl-guide{background:linear-gradient(90deg,rgb(83 151 200 / .10),var(--sw-panel-2) 55%)}
+:root[data-neural-interior] .ct-t,:root[data-neural-interior] .ct-live{background:var(--landing-fill);color:#fff}
+:root[data-neural-interior] .admin-nav a.active{background:rgb(83 151 200 / .12);color:var(--red);box-shadow:inset 3px 0 0 var(--landing-ray)}
+:root[data-neural-interior] .agp-tabs button.on,:root[data-neural-interior] .sw-tabs button.on{color:var(--red)}
+:root[data-neural-interior] .badge.red{color:var(--red);border-color:rgb(83 151 200 / .5);background:rgb(83 151 200 / .10)}
+:root[data-neural-interior] .pl-fill{background:var(--landing-fill)}
+:root[data-neural-interior] .pl.reviewing .pl-fill,:root[data-neural-interior] .trv-bar.blue em{background:linear-gradient(90deg,var(--landing-blue),var(--landing-ice))}
+:root[data-neural-interior] .pl-knob,:root[data-neural-interior] .pl.reviewing .pl-knob{border-color:var(--landing-ray)}
+:root[data-neural-interior] .pl-state.rv{color:var(--sw-blue)}
+:root[data-neural-interior] .sw-msg.human .sw-mb{border-color:rgb(83 151 200 / .3)}
+:root[data-neural-interior] .tg.q{border-color:rgb(83 151 200 / .5)}
+:root[data-neural-interior] .sw-goal.g-k{border-left-color:var(--landing-ray)}

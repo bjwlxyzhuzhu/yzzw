@@ -43,7 +43,51 @@ const IDEO_TEMPLATES = IS_ZH ? CULTURE_TEMPLATES : IDEO_TEMPLATES_BASE;
 function sentencesOf(text) {
   return text.split(/(?<=[。！？；\n])/).map(clean).filter((s) => s.length >= 6 && s.length <= 220);
 }
+// ---- 课件（PPTX）按页切分：用每页真实标题作章节名，而不是“【第N页】” ----
+const PAGE_RE = /^【第(\d+)页】$/;
+const hasCjk = (s) => /[一-鿿]/.test(s);
+/** 去掉双语标题中的英文部分，保留“课文 1”这类编号：“汉语的声调（四声）Tones(Four Tones)” → “汉语的声调（四声）”。 */
+function cjkTitle(l) {
+  const s = clean(l).replace(/^\d+[.．、]\s*/, '');
+  const m = s.match(/^(.*?[一-鿿）)》])\s*([A-Za-z].*)$/);
+  if (!m) return hasCjk(s) && !/[A-Za-z]/.test(s) ? s.replace(/\s+/g, '') : s;
+  const num = (m[2].match(/^[A-Za-z]+\s*(\d+)\s*$/) || [])[1];
+  return `${m[1].replace(/\s+/g, '')}${num ? ` ${num}` : ''}`;
+}
+function slideSections(m) {
+  const pages = []; let cur = null;
+  for (const raw of m.text.split('\n')) {
+    const l = clean(raw); if (!l) continue;
+    const pm = l.match(PAGE_RE);
+    if (pm) { cur = { page: Number(pm[1]), lines: [] }; pages.push(cur); } else if (cur) cur.lines.push(l);
+  }
+  // 出现在多页上的双语栏目条（如“拼音Pinyin”“生词New Words”）
+  const freq = {}; pages.forEach((p) => new Set(p.lines).forEach((l) => { freq[l] = (freq[l] || 0) + 1; }));
+  const bilingual = (l) => hasCjk(l) && /[一-鿿]\s*[A-Za-z]/.test(l) && l.length <= 24;
+  const out = []; let last = null;
+  pages.forEach((p, i) => {
+    const cjk = p.lines.filter(hasCjk);
+    if (i === 0 && cjk.length && p.lines.length <= 5) { out.push({ title: cjkTitle(cjk.find((l) => /《.+》/.test(l)) || cjk[0]), lines: p.lines, heading: true, cover: true }); return; }
+    const numbered = p.lines.find((l) => /^\d+[.．、]\s*\S/.test(l) && hasCjk(l) && l.length <= 60);
+    const cat = p.lines.find((l) => bilingual(l) && freq[l] >= 3) || p.lines.find(bilingual) || null;
+    // 没有编号标题、且与上一页同一栏目：是上一节的练习页，并入上一节
+    if (!numbered && last && cat && last.cat === cat) { last.lines.push(...p.lines.filter((l) => l !== cat)); return; }
+    const title = numbered ? cjkTitle(numbered) : cat ? cjkTitle(cat) : cjkTitle(cjk.find((l) => l.replace(/\s/g, '').length <= 12) || `第${p.page}页`);
+    const body = p.lines.filter((l) => l !== numbered && l !== cat);
+    if (last && last.title === title) { last.lines.push(...body); return; }
+    last = { title, lines: body, heading: true, cat }; out.push(last);
+  });
+  // 课件页多为短词、拼音和英文释义：用页内的汉字与带调拼音概括本节内容
+  const PINYIN = /[āáǎàōóǒòēéěèīíǐìūúǔùǖǘǚǜ]/;
+  for (const s of out) {
+    const keep = [...new Set(s.lines.map((l) => l.replace(/\s+/g, ' ').trim()).filter((l) => (hasCjk(l) || PINYIN.test(l)) && l.length <= 30 && !/^[A-Za-z\s]+$/.test(l)))];
+    s.summary = keep.join('  ').slice(0, 140);
+  }
+  return out;
+}
+
 function sectionsOf(m) {
+  if (PAGE_RE.test(clean(m.text.split('\n').find((l) => clean(l)) || ''))) return slideSections(m);
   const out = []; let cur = { title: m.filename.replace(/\.[a-z]+$/i, ''), lines: [] };
   for (const raw of m.text.split('\n')) {
     const l = clean(raw); if (!l) continue;
@@ -57,9 +101,13 @@ function sectionsOf(m) {
 function guessCourse(materials) {
   const all = materials.map((m) => m.text).join('\n');
   const first = materials[0];
-  const lines = first ? first.text.split('\n').map(clean).filter(Boolean) : [];
+  const lines = first ? first.text.split('\n').map(clean).filter((l) => l && !PAGE_RE.test(l)) : [];
+  // 课件封面：《书名》作课程名，“第 N 课”+课题作单元
+  const book = lines.slice(0, 6).find((l) => /《.+》/.test(l));
+  const lessonAt = lines.slice(0, 6).findIndex((l) => /^第\s*\d+\s*课$/.test(l));
+  const coverUnit = lessonAt >= 0 ? `${lines[lessonAt].replace(/\s+/g, '')}${lines[lessonAt + 1] && !/《/.test(lines[lessonAt + 1]) ? ` ${lines[lessonAt + 1]}` : ''}` : '';
   const nameLine = lines.find((l) => /课程名称[:：]/.test(l));
-  const name = nameLine ? clean(nameLine.split(/[:：]/)[1]).slice(0, 30) : (lines[0] && lines[0].length <= 24 && !/[。，]/.test(lines[0]) ? stripNum(lines[0]) : first?.filename.replace(/\.[a-z]+$/i, '').replace(/(教学大纲|讲义|课件|教案|大纲)$/, '') || '');
+  const name = nameLine ? clean(nameLine.split(/[:：]/)[1]).slice(0, 30) : book ? book.replace(/^.*?《(.+?)》(.*)$/, '$1 $2').trim().slice(0, 30) : (lines[0] && lines[0].length <= 24 && !/[。，]/.test(lines[0]) ? stripNum(lines[0]) : first?.filename.replace(/\.[a-z]+$/i, '').replace(/(教学大纲|讲义|课件|教案|大纲)$/, '') || '');
   const hours = (all.match(/(?:总学时|学时)[:：\s]*(\d{1,3})|(\d{1,3})\s*学时/) || []).slice(1).find(Boolean);
   const weeks = (all.match(/(\d{1,2})\s*周/) || [])[1];
   const major = (all.match(/(?:适用专业|专业)[:：\s]*([^\s，。；]{2,20})/) || [])[1];
@@ -67,6 +115,7 @@ function guessCourse(materials) {
   const sents = sentencesOf(all);
   const pick = (re) => [...new Set(sents.filter((s) => re.test(s)).map((s) => s.replace(/^[^：:]{0,10}[:：]/, '')))].slice(0, 2).join(''); // 同一材料重复导入时不重复取句
   return {
+    ...(coverUnit ? { unit: coverUnit } : {}),
     name: name || '', major: major || '', audience: audience || '', hours: hours ? Number(hours) : null, weeks: weeks ? Number(weeks) : null,
     goal_knowledge: pick(/^(?!.*(课程思政|思政|价值)).*(掌握|理解|了解|熟悉)/).slice(0, 160), goal_ability: pick(/能够|能运用|学会|会用|具备.{0,6}能力/).slice(0, 160), goal_value: pick(/培养|树立|增强|养成|意识|精神|责任/).slice(0, 160),
   };
@@ -98,10 +147,10 @@ export function analyzeMaterials(materials, { max = 30 } = {}) {
         }
       }
       // headings without an explicit definition still name a knowledge point
-      if (sec.heading && !secKps.length && !seen.has(sec.title) && sec.title.length >= 2 && sec.title.length <= 20 && !GENERIC.test(sec.title)) {
+      if (sec.heading && !sec.cover && !secKps.length && !seen.has(sec.title) && sec.title.length >= 2 && sec.title.length <= 20 && !GENERIC.test(sec.title)) {
         seen.add(sec.title);
         // outline items without body text are kept as topics; their definition must be supplied by the teacher
-        secKps.push({ term: sec.title, definition: sents.length ? sents.slice(0, 2).join('').slice(0, 160) : '（材料只列出了这一主题，未给出具体内容，需教师补充）', sentence: sents[0] || '', section: sec.title, source: src, kind: sents.length ? 'heading' : 'topic' });
+        secKps.push({ term: sec.title, definition: sec.summary || (sents.length ? sents.slice(0, 2).join('').slice(0, 160) : '（材料只列出了这一主题，未给出具体内容，需教师补充）'), sentence: sents[0] || '', section: sec.title, source: src, kind: sents.length || sec.summary ? 'heading' : 'topic' });
       }
       for (const kp of secKps) {
         kp.key_sentences = sents.filter((s) => s !== kp.sentence && (s.includes(kp.term) || /重点|关键|注意|必须|原则|方法|步骤|条件/.test(s))).slice(0, 3);
